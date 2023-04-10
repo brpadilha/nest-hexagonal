@@ -9,7 +9,7 @@ import { HttpModule } from '@nestjs/axios';
   imports: [
     SequelizeModule.forFeature([List]),
     HttpModule.register({
-      baseURL: 'https://localhost:8000',
+      baseURL: 'http://localhost:8000',
     }),
   ],
   controllers: [ListsController],
