@@ -1,21 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateListDto } from './dto/create-list.dto';
 import { UpdateListDto } from './dto/update-list.dto';
-import { InjectModel } from '@nestjs/sequelize';
-import { List } from './entities/list.entity';
+
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
+import { ListGatewayInterface } from './gateways/list-gateway-interface';
+import { List } from './entities/list.entity';
 
 @Injectable()
 export class ListsService {
   constructor(
-    @InjectModel(List)
-    private ListModel: typeof List,
+    private listGateway: ListGatewayInterface, // porta
     private httpService: HttpService,
   ) {}
 
   async create(createListDto: CreateListDto) {
-    const list = await this.ListModel.create(createListDto);
+    const list = new List(createListDto.name);
+    await this.listGateway.create(list);
 
     // como é um observable
     // temos que passar essa função lastValueFrom do rxjs para que ele escute o ultimo valor da observable
@@ -29,12 +30,11 @@ export class ListsService {
   }
 
   findAll() {
-    return this.ListModel.findAll();
+    return this.listGateway.findAll();
   }
 
   async findOne(id: number) {
-    console.log(id);
-    const list = await this.ListModel.findByPk(id);
+    const list = await this.listGateway.findById(id);
     if (!list) {
       throw new Error('List not found');
     }
