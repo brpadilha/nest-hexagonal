@@ -1,23 +1,24 @@
-import { of } from 'rxjs';
 import { ListGatewayInMemory } from './gateways/list-gateway-in-memory';
 import { ListsService } from './lists.service';
 
-const mockHttpService = {
-  post: jest.fn().mockReturnValue(of(null)),
-};
-
 describe('ListsService', () => {
   let service: ListsService;
-  let listGateway: ListGatewayInMemory;
+  let listPersistenceGateway: ListGatewayInMemory;
+  let listIntegrationGateway: ListGatewayInMemory;
 
   beforeEach(() => {
-    listGateway = new ListGatewayInMemory();
-    service = new ListsService(listGateway as any, mockHttpService as any);
+    listPersistenceGateway = new ListGatewayInMemory();
+    listIntegrationGateway = new ListGatewayInMemory();
+    service = new ListsService(
+      listPersistenceGateway as any,
+      listIntegrationGateway as any,
+    );
   });
 
   it('should create a list', async () => {
     const list = await service.create({ name: 'my list' });
-    expect(listGateway.items).toEqual([list]);
+    expect(listPersistenceGateway.items).toEqual([list]);
+    expect(listIntegrationGateway.items).toEqual([list]);
   });
 
   // let service: ListsService;
