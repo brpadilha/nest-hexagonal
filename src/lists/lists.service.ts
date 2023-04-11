@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateListDto } from './dto/create-list.dto';
 import { UpdateListDto } from './dto/update-list.dto';
 
@@ -10,6 +10,7 @@ import { List } from './entities/list.entity';
 @Injectable()
 export class ListsService {
   constructor(
+    @Inject('ListGatewayInterface')
     private listGateway: ListGatewayInterface, // porta
     private httpService: HttpService,
   ) {}
