@@ -12,7 +12,6 @@ export class ListGatewayHttp implements ListGatewayInterface {
   ) {}
 
   async create(list: List): Promise<List> {
-    console.log(list);
     // como é um observable
     // temos que passar essa função lastValueFrom do rxjs para que ele escute o ultimo valor da observable
     // com isso retorna uma promise do que vier do observable
